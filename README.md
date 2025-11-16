@@ -71,19 +71,92 @@ We are now at the last part of step by step guide on how to simulate STM32 proje
 
 
 ## STM 32 CUBE PROGRAM :
+```
+#include "main.h"
+#include<stdbool.h>
+void push_button();
+bool button_status;
+void SystemClock_Config(void);
 
+int main(void)
+{
+  HAL_Init();
+
+  SystemClock_Config();
+
+  while (1)
+  {
+	  push_button();
+
+  }
+}
+void push_button()
+{
+	button_status=HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_13);
+	if(button_status==0)
+	{
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET);
+	}
+	else
+	{
+		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET);
+	}
+}
+
+void SystemClock_Config(void)
+{
+  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+void Error_Handler(void)
+{
+  __disable_irq();
+  while (1)
+  {
+  }
+}
+
+#ifdef  USE_FULL_ASSERT
+void assert_failed(uint8_t *file, uint32_t line)
+{
+}
+#endif 
+
+```
 
 
 
 ## Output screen shots of proteus  :
+<img width="1920" height="1007" alt="423830036-f02dd5fb-85b7-4188-b3b9-5ccbe08e2bd3" src="https://github.com/user-attachments/assets/f3ad6b18-f78f-4387-8b04-d73929a5320d" />
 
+<img width="1920" height="1013" alt="423830069-a5aa425d-c8c6-4b30-8d33-30f597cb9e7f" src="https://github.com/user-attachments/assets/caddb32e-1d23-487c-999a-1344a55c121e" />
 
 
 
 ## Proteus layout(Add pdf screen shot of circuit here)
  
  
- 
+ <img width="1342" height="890" alt="423830989-f6efffaa-7014-43db-ad02-9afff2187310" src="https://github.com/user-attachments/assets/82f9f239-f293-4ae4-a85c-90462a8f1856" />
+
  
 ## Result :
 Interfacing a digital output and digital input  with ARM microcontroller are simulated in proteus and the results are verified.
